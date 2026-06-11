@@ -1,4 +1,4 @@
-package uz.aloqa.grafi;
+package uz.mirikdev.open_birdarcha;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

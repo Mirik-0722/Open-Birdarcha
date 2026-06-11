@@ -1,12 +1,12 @@
-package uz.aloqa.grafi.graph;
+package uz.mirikdev.open_birdarcha.graph;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import uz.aloqa.grafi.dto.EdgeDto;
-import uz.aloqa.grafi.dto.GraphResponse;
-import uz.aloqa.grafi.dto.NodeDto;
+import uz.mirikdev.open_birdarcha.dto.EdgeDto;
+import uz.mirikdev.open_birdarcha.dto.GraphResponse;
+import uz.mirikdev.open_birdarcha.dto.NodeDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;

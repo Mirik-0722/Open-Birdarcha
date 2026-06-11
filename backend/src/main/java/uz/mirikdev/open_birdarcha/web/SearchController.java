@@ -1,10 +1,10 @@
-package uz.aloqa.grafi.web;
+package uz.mirikdev.open_birdarcha.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uz.aloqa.grafi.dto.SearchResponse;
-import uz.aloqa.grafi.service.SearchService;
+import uz.mirikdev.open_birdarcha.dto.SearchResponse;
+import uz.mirikdev.open_birdarcha.service.SearchService;
 
 @RestController
 public class SearchController {

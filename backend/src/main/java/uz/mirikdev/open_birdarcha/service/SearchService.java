@@ -1,8 +1,8 @@
-package uz.aloqa.grafi.service;
+package uz.mirikdev.open_birdarcha.service;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-import uz.aloqa.grafi.dto.SearchItem;
+import uz.mirikdev.open_birdarcha.dto.SearchItem;
 
 import java.util.ArrayList;
 import java.util.List;

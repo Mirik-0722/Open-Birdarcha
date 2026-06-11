@@ -1,4 +1,4 @@
-package uz.aloqa.grafi.graph;
+package uz.mirikdev.open_birdarcha.graph;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

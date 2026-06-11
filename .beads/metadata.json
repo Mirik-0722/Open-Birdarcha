@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "birdarcha",
+  "project_id": "6edff10c-77c9-4cb5-9d94-bc94e8b9ac0c"
+}

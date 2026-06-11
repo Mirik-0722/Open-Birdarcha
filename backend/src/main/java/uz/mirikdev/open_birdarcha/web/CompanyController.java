@@ -1,12 +1,12 @@
-package uz.aloqa.grafi.web;
+package uz.mirikdev.open_birdarcha.web;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import uz.aloqa.grafi.dto.CompanyCard;
-import uz.aloqa.grafi.service.CompanyService;
+import uz.mirikdev.open_birdarcha.dto.CompanyCard;
+import uz.mirikdev.open_birdarcha.service.CompanyService;
 
 import java.util.UUID;
 

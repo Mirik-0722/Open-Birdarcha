@@ -1,9 +1,9 @@
-package uz.aloqa.grafi.service;
+package uz.mirikdev.open_birdarcha.service;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-import uz.aloqa.grafi.dto.LinkItem;
-import uz.aloqa.grafi.dto.PersonCard;
+import uz.mirikdev.open_birdarcha.dto.LinkItem;
+import uz.mirikdev.open_birdarcha.dto.PersonCard;
 
 import java.time.LocalDate;
 import java.util.List;

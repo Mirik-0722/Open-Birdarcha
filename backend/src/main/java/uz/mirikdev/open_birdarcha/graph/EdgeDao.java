@@ -1,4 +1,4 @@
-package uz.aloqa.grafi.graph;
+package uz.mirikdev.open_birdarcha.graph;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;

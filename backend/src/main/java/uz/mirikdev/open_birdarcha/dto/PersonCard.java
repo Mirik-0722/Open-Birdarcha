@@ -1,4 +1,4 @@
-package uz.aloqa.grafi.dto;
+package uz.mirikdev.open_birdarcha.dto;
 
 import java.util.List;
 
