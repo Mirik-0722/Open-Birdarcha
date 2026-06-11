@@ -1,4 +1,4 @@
-# Aloqalar grafi — MVP skelet
+# Open Birdarcha — MVP skelet
 
 Rusprofile uslubidagi biznes aloqalar servisi: kompaniya/shaxs qidiruvi, kartochkalar va interaktiv aloqalar grafi (Sigma.js).
 
@@ -74,5 +74,3 @@ Muhim qoidalar: aloqa (founder/director) yozuvlari o'chirilmaydi — tugagan alo
 ## Keyingi qadamlar (yo'riqnomadagi 9-bo'lim)
 
 Redis kesh (`@Cacheable`), rate limit (bucket4j), parser/`@Scheduled` ETL, SEO uchun SSR.
-# Open-Birdarcha
-# Open-Birdarcha
