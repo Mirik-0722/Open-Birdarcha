@@ -75,3 +75,4 @@ Muhim qoidalar: aloqa (founder/director) yozuvlari o'chirilmaydi — tugagan alo
 
 Redis kesh (`@Cacheable`), rate limit (bucket4j), parser/`@Scheduled` ETL, SEO uchun SSR.
 # Open-Birdarcha
+# Open-Birdarcha
