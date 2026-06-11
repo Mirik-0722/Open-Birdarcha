@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: aloqa-backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/aloqa
+    username: aloqa
+    password: aloqa
+  flyway:
+    enabled: true
+server:
+  port: 8080

@@ -1,0 +1,79 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #222;
+  background: #fafafa;
+}
+
+.topbar { padding: 12px 20px; background: #1f2a44; }
+.topbar a { color: #fff; text-decoration: none; font-weight: 600; }
+
+.page { max-width: 960px; margin: 0 auto; padding: 20px; }
+.muted { color: #777; }
+.red { color: #c0392b; }
+
+.badge-red {
+  background: #fdecea;
+  color: #c0392b;
+  border: 1px solid #f5c6c0;
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.search-form { display: flex; gap: 8px; margin: 16px 0; }
+.search-form input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+.search-form button {
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 6px;
+  background: #2f6fed;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.results { list-style: none; padding: 0; }
+.results li { padding: 10px 4px; border-bottom: 1px solid #eee; }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 700px) { .cols { grid-template-columns: 1fr; } }
+
+.graph-wrap { position: relative; }
+.graph-container {
+  height: 520px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+}
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 8px 2px;
+  font-size: 13px;
+  color: #555;
+  align-items: center;
+}
+.graph-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.graph-legend .hint { margin-left: auto; color: #999; }
+.graph-info, .graph-error { margin-top: 6px; font-size: 13px; }
+.graph-error { color: #c0392b; }
+
+ul { padding-left: 18px; }
+section h3, .page h3 { margin: 18px 0 8px; }
