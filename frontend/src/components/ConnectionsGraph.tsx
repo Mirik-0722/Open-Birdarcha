@@ -261,7 +261,7 @@ function Inner({ nodeId }: { nodeId: string }) {
       >
         <Background variant={BackgroundVariant.Dots} gap={22} size={1.4} color="#dbe2ec" />
 
-        <Panel position="top-right" className="rf-ctrls">
+        <Panel position="top-left" className="rf-ctrls">
           <button onClick={() => rf.zoomIn({ duration: 200 })} title="Kattalashtirish">+</button>
           <button onClick={() => rf.zoomOut({ duration: 200 })} title="Kichiklashtirish">−</button>
           <button onClick={() => rf.fitView({ duration: 400, padding: 0.18 })} title="Hammasini ko'rsatish">⤢</button>
@@ -270,7 +270,7 @@ function Inner({ nodeId }: { nodeId: string }) {
           </button>
         </Panel>
 
-        <Panel position="bottom-right" className="rf-legend">
+        <Panel position="bottom-left" className="rf-legend">
           <div className="leg-grid">
             <span className="leg-pill company">Yuridik shaxs</span>
             <span className="leg-edge"><i className="ln founder" /> ta'sis etgan</span>

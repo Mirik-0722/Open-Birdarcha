@@ -144,13 +144,13 @@ function Inner({ gNodes, gEdges, rootId }: { gNodes: GNode[]; gEdges: GEdge[]; r
         fitViewOptions={{ padding: 0.2 }}
       >
         <Background variant={BackgroundVariant.Dots} gap={22} size={1.4} color="#dbe2ec" />
-        <Panel position="top-right" className="rf-ctrls">
+        <Panel position="top-left" className="rf-ctrls">
           <button onClick={() => rf.zoomIn({ duration: 200 })} title="Kattalashtirish">+</button>
           <button onClick={() => rf.zoomOut({ duration: 200 })} title="Kichiklashtirish">−</button>
           <button onClick={() => rf.fitView({ duration: 400, padding: 0.2 })} title="Hammasini ko'rsatish">⤢</button>
           <button onClick={toggleFs} title={isFs ? "Chiqish" : "Butun ekran"} className="fs">{isFs ? "×" : "⛶"}</button>
         </Panel>
-        <Panel position="bottom-right" className="rf-legend">
+        <Panel position="bottom-left" className="rf-legend">
           <div className="leg-grid">
             <span className="leg-pill company">Yuridik shaxs</span>
             <span className="leg-edge"><i className="ln founder" /> ta'sis etgan</span>
