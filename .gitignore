@@ -14,5 +14,8 @@ target/
 # Local DB dump (dev seed) — commit qilinmaydi
 dev-db-dump.sql
 
+# Deploy sirlari — .env commit qilinmaydi (.env.example qoladi)
+.env
+
 # Claude worktree'lari — alohida git repo, commit qilinmaydi
 .claude/worktrees/

@@ -1,0 +1,28 @@
+# Deploy: backend (Spring Boot) + frontend (nginx) — alohida xizmatlar.
+# PostgreSQL — tashqi (VPS'da), DATABASE_URL orqali beriladi.
+#
+#   cp .env.example .env   (qiymatlarni to'ldiring)
+#   docker compose -f docker-compose.prod.yml up -d --build
+# Sayt: http://VPS-IP:${FRONTEND_PORT}
+
+services:
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      # postgres://user:pass@host:port/db  — entrypoint buni jdbc'ga o'giradi.
+      # Qiymat .env dan olinadi; belgilanmasa konteyner ataylab ishga tushmaydi (sir kodda saqlanmaydi).
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL .env faylida belgilanishi shart}
+      FLYWAY_BASELINE_ON_MIGRATE: ${FLYWAY_BASELINE_ON_MIGRATE:-false}
+    ports:
+      - "${BACKEND_PORT:-8011}:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-8010}:80"
+    depends_on:
+      - backend
