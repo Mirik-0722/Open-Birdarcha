@@ -10,3 +10,9 @@ target/
 *.db
 .beads-credential-key
 .beads/proxieddb/
+
+# Local DB dump (dev seed) — commit qilinmaydi
+dev-db-dump.sql
+
+# Claude worktree'lari — alohida git repo, commit qilinmaydi
+.claude/worktrees/

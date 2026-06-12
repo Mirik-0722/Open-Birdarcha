@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-GrafiApplication<aloqa-backend>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "uz.aloqa.grafi.GrafiApplication",
+            "projectName": "aloqa-backend",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

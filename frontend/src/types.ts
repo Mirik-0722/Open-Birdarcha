@@ -17,15 +17,33 @@ export interface GEdge {
   data?: Record<string, any>;
 }
 
+export interface Controller {
+  ref: string; // "person:UUID" | "company:UUID"
+  label: string;
+  type: string; // person | company
+  companies: number; // nechta firmani boshqaradi
+}
+
 export interface GraphResponse {
   root: string;
   nodes: GNode[];
   edges: GEdge[];
   meta?: {
-    depth: number;
+    depth?: number;
     truncated?: boolean;
     collapsed?: Record<string, number>;
+    groupSize?: number;
+    controllers?: Controller[];
   };
+}
+
+export interface PathResponse {
+  from: string;
+  to: string;
+  found: boolean;
+  nodes: GNode[]; // from ... to tartibida
+  edges: GEdge[];
+  length: number; // qadamlar (qirralar) soni; topilmasa -1
 }
 
 export interface SearchItem {

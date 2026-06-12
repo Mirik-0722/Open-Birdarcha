@@ -1,6 +1,7 @@
 import type {
   CompanyCard,
   GraphResponse,
+  PathResponse,
   PersonCard,
   SearchResponse,
 } from "./types";
@@ -29,3 +30,13 @@ export const getGraph = (node: string, depth = 2) =>
 
 export const expandNode = (node: string) =>
   getJSON<GraphResponse>(`/api/graph/expand?node=${encodeURIComponent(node)}`);
+
+export const getPath = (from: string, to: string) =>
+  getJSON<PathResponse>(
+    `/api/path?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`
+  );
+
+export const getAffiliations = (node: string) =>
+  getJSON<GraphResponse>(
+    `/api/affiliations?node=${encodeURIComponent(node)}`
+  );
