@@ -2,10 +2,13 @@ spring:
   application:
     name: aloqa-backend
   datasource:
-    url: jdbc:postgresql://localhost:5432/aloqa
-    username: aloqa
-    password: aloqa
+    # Ulanish ma'lumotlari environment'dan olinadi (deploy uchun).
+    # Lokal ishlashda quyidagi standart qiymatlar ishlatiladi.
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/aloqa}
+    username: ${DB_USERNAME:aloqa}
+    password: ${DB_PASSWORD:aloqa}
   flyway:
     enabled: true
+    baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:false}
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
