@@ -41,6 +41,8 @@ public class TelegramBotPoller {
             log.warn("TELEGRAM_BOT_TOKEN berilmagan — Telegram login o'chirilgan.");
             return;
         }
+        // Token/ulanishni darrov tekshiramiz — startup'da yaqqol "ishlayapti/yo'q" signali.
+        verifyConnection();
         // Webhook o'rnatilgan bo'lsa polling bilan ziddiyatga (409) tushadi — startup'da tozalaymiz.
         try {
             tg.deleteWebhook();
@@ -53,6 +55,28 @@ public class TelegramBotPoller {
         t.setDaemon(true);
         t.start();
         log.info("Telegram bot poller ishga tushdi.");
+    }
+
+    /**
+     * Telegram'ga ulanishni getMe orqali tekshiradi va natijani logga yozadi.
+     * Muvaffaqiyatda true (bot ma'lumoti chiqadi), aks holda false (token/tarmoq muammosi).
+     */
+    boolean verifyConnection() {
+        try {
+            JsonNode me = tg.getMe();
+            if (me != null && me.path("ok").asBoolean(false)) {
+                JsonNode r = me.path("result");
+                log.info("Telegram ulanish OK — bot @{} (id={})",
+                        r.path("username").asText("?"), r.path("id").asLong());
+                return true;
+            }
+            log.error("Telegram getMe muvaffaqiyatsiz (ok=false): {} — TELEGRAM_BOT_TOKEN to'g'rimi?",
+                    me == null ? "javob yo'q" : me.path("description").asText("noma'lum xato"));
+            return false;
+        } catch (Exception e) {
+            log.error("Telegram'ga ulanib bo'lmadi (getMe): {} — token/tarmoqni tekshiring.", e.getMessage());
+            return false;
+        }
     }
 
     private void loop() {
