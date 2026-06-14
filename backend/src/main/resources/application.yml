@@ -27,6 +27,13 @@ spring:
     baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:false}
 server:
   port: ${SERVER_PORT:8080}
+  # Reverse-proxy (nginx) orqasida — X-Forwarded-* header'larini hisobga oladi (https/host to'g'ri aniqlanadi).
+  forward-headers-strategy: framework
+
+# CORS — ruxsat etilgan frontend origin'lar (vergul bilan). Prod domenini APP_CORS_ALLOWED_ORIGINS bilan bering.
+app:
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:http://localhost:5173}
 
 # Telegram bot orqali login.
 telegram:
