@@ -10,6 +10,7 @@ services:
     build:
       context: ./backend
     container_name: open-birdarcha-backend
+    image: open-birdarcha-backend:latest
     restart: unless-stopped
     environment:
       # postgres://user:pass@host:port/db  — entrypoint buni jdbc'ga o'giradi.
@@ -28,6 +29,7 @@ services:
     build:
       context: ./frontend
     container_name: open-birdarcha-frontend
+    image: open-birdarcha-frontend:latest
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-8010}:80"

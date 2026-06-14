@@ -11,16 +11,16 @@ spring:
       - "optional:file:../.env[.properties]"
       - "optional:file:./backend/.env[.properties]"
   application:
-    name: aloqa-backend
+    name: open-birdarcha-backend
   datasource:
     # Ulanish ma'lumotlari environment'dan olinadi (deploy uchun).
     # Lokal ishlashda quyidagi standart qiymatlar ishlatiladi.
-    # url: ${DB_URL:jdbc:postgresql://localhost:5432/aloqa}
-    # username: ${DB_USERNAME:aloqa}
-    # password: ${DB_PASSWORD:aloqa}
-    url: jdbc:postgresql://localhost:5432/aloqa
-    username: aloqa
-    password: aloqa
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/aloqa}
+    username: ${DB_USERNAME:aloqa}
+    password: ${DB_PASSWORD:aloqa}
+    # url: jdbc:postgresql://localhost:5432/aloqa
+    # username: aloqa
+    # password: aloqa
 
   flyway:
     enabled: true
