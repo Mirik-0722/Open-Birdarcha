@@ -5,9 +5,19 @@ import type {
   PersonCard,
   SearchResponse,
 } from "./types";
+import { clearAuth, getToken } from "./auth";
 
 async function getJSON<T>(url: string): Promise<T> {
-  const res = await fetch(url);
+  const token = getToken();
+  const res = await fetch(url, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (res.status === 401) {
+    // Token yaroqsiz/muddati o'tgan — tozalab login sahifasiga qaytaramiz.
+    clearAuth();
+    window.location.href = "/login";
+    throw new Error("Unauthorized");
+  }
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`);
   }

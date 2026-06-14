@@ -1,0 +1,152 @@
+package uz.mirikdev.open_birdarcha.telegram;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+import uz.mirikdev.open_birdarcha.auth.LoginSessionStore;
+import uz.mirikdev.open_birdarcha.service.AuthService;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Telegram bot'ni long-polling orqali tinglaydi (webhook/tunnel shart emas — localhost'da ham ishlaydi).
+ * /start &lt;nonce&gt; → kontakt so'rash; kontakt ulashilganda → token chiqarib sessiyani tasdiqlash.
+ */
+@Component
+public class TelegramBotPoller {
+
+    private static final Logger log = LoggerFactory.getLogger(TelegramBotPoller.class);
+
+    private final TelegramClient tg;
+    private final LoginSessionStore sessions;
+    private final AuthService auth;
+
+    private volatile boolean running = false;
+    private long offset = 0;
+
+    public TelegramBotPoller(TelegramClient tg, LoginSessionStore sessions, AuthService auth) {
+        this.tg = tg;
+        this.sessions = sessions;
+        this.auth = auth;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void start() {
+        if (!tg.isEnabled()) {
+            log.warn("TELEGRAM_BOT_TOKEN berilmagan — Telegram login o'chirilgan.");
+            return;
+        }
+        running = true;
+        Thread t = new Thread(this::loop, "tg-poller");
+        t.setDaemon(true);
+        t.start();
+        log.info("Telegram bot poller ishga tushdi.");
+    }
+
+    private void loop() {
+        while (running) {
+            try {
+                JsonNode resp = tg.getUpdates(offset, 30);
+                for (JsonNode upd : resp.path("result")) {
+                    offset = upd.path("update_id").asLong() + 1;
+                    handle(upd);
+                }
+            } catch (Exception e) {
+                log.warn("getUpdates xato: {}", e.getMessage());
+                sleep(3000);
+            }
+        }
+    }
+
+    private void handle(JsonNode upd) {
+        JsonNode msg = upd.path("message");
+        if (msg.isMissingNode()) {
+            return;
+        }
+        long chatId = msg.path("chat").path("id").asLong();
+        JsonNode from = msg.path("from");
+
+        // 1-qadam: /start <nonce>
+        String text = msg.path("text").asText("");
+        if (text.startsWith("/start")) {
+            String[] parts = text.split("\\s+", 2);
+            String nonce = parts.length > 1 ? parts[1].trim() : "";
+            if (sessions.exists(nonce)) {
+                sessions.linkChat(chatId, nonce);
+                tg.sendMessage(chatId,
+                        "Open Birdarcha'ga kirish uchun telefon raqamingizni ulashing 👇",
+                        TelegramClient.contactKeyboard("📱 Raqamni ulashish"));
+            } else {
+                tg.sendMessage(chatId, "Havola eskirgan. Saytdagi tugma orqali qaytadan kiring.", null);
+            }
+            return;
+        }
+
+        // 2-qadam: kontakt ulashildi
+        JsonNode contact = msg.path("contact");
+        if (!contact.isMissingNode()) {
+            String nonce = sessions.takeNonceForChat(chatId);
+            if (nonce == null || !sessions.exists(nonce)) {
+                tg.sendMessage(chatId, "Sessiya topilmadi. Saytdan qaytadan kiring.", TelegramClient.removeKeyboard());
+                return;
+            }
+            long fromId = from.path("id").asLong();
+            // Faqat o'z raqamini (boshqa kontaktni emas) qabul qilamiz.
+            if (contact.path("user_id").asLong(0) != fromId) {
+                tg.sendMessage(chatId, "Iltimos, tugma orqali o'z raqamingizni ulashing.", null);
+                sessions.linkChat(chatId, nonce); // qayta urinish uchun bog'lashni tiklaymiz
+                return;
+            }
+
+            Map<String, Object> user = new HashMap<>();
+            user.put("id", fromId);
+            user.put("first_name", textOrNull(from, "first_name"));
+            user.put("last_name", textOrNull(from, "last_name"));
+            user.put("username", textOrNull(from, "username"));
+            user.put("phone", contact.path("phone_number").asText(null));
+            user.put("photo", tg.fetchPhotoDataUri(fromId));
+
+            String token = auth.issueToken(user);
+            sessions.confirm(nonce, user, token);
+
+            // Muvaffaqiyat xabari + "Saytga qaytish". Avval inline tugma sinaladi (real https domen uchun ideal);
+            // Telegram URL'ni rad etsa (localhost/IP) — havola matn ko'rinishida yuboriladi.
+            LoginSessionStore.Session sess = sessions.get(nonce);
+            String origin = sess == null ? null : sess.origin;
+            boolean buttonSent = false;
+            if (origin != null && !origin.isBlank()) {
+                try {
+                    tg.sendMessage(chatId, "✅ Muvaffaqiyatli kirdingiz! Saytga qaytishingiz mumkin.",
+                            TelegramClient.inlineUrlKeyboard("🔙 Saytga qaytish", origin));
+                    buttonSent = true;
+                } catch (Exception e) {
+                    log.warn("Inline 'Saytga qaytish' tugmasi rad etildi ({}) — matnli havolaga o'tamiz: {}",
+                            origin, e.getMessage());
+                }
+            }
+            if (!buttonSent) {
+                String okText = (origin != null && !origin.isBlank())
+                        ? "✅ Muvaffaqiyatli kirdingiz! Saytga qayting: " + origin
+                        : "✅ Muvaffaqiyatli kirdingiz! Brauzerga qaytsangiz — avtomatik kirasiz.";
+                tg.sendMessage(chatId, okText, TelegramClient.removeKeyboard());
+            }
+        }
+    }
+
+    private static String textOrNull(JsonNode node, String field) {
+        JsonNode v = node.path(field);
+        return v.isMissingNode() || v.isNull() ? null : v.asText();
+    }
+
+    private static void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}

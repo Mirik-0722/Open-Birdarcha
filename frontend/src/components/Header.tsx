@@ -1,11 +1,19 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IconRoute, IconSearch } from "../icons";
+import { useAuth } from "../AuthContext";
+import { userDisplayName } from "../auth";
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const onHome = location.pathname === "/";
+  const { user, logout } = useAuth();
+
+  function onLogout() {
+    logout();
+    navigate("/login", { replace: true });
+  }
 
   // Inputni URL ?q bilan sinxron saqlash: SearchPage yoki misol-chiplar
   // navigatsiya qilganda header qidiruvi ham yangilanadi.
@@ -53,6 +61,19 @@ export default function Header() {
           <Link to="/path">
             <IconRoute size={16} /> Bog'lanish zanjiri
           </Link>
+          <span className="header-user" title={user?.phone ?? undefined}>
+            {user?.photo ? (
+              <img className="header-avatar" src={user.photo} alt="" />
+            ) : (
+              <span className="header-avatar header-avatar--ph">
+                {userDisplayName(user).charAt(0).toUpperCase()}
+              </span>
+            )}
+            {userDisplayName(user)}
+          </span>
+          <button className="logout-btn" onClick={onLogout}>
+            Chiqish
+          </button>
         </nav>
       </div>
     </header>

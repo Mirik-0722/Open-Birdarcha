@@ -15,6 +15,11 @@ services:
       # Qiymat .env dan olinadi; belgilanmasa konteyner ataylab ishga tushmaydi (sir kodda saqlanmaydi).
       DATABASE_URL: ${DATABASE_URL:?DATABASE_URL .env faylida belgilanishi shart}
       FLYWAY_BASELINE_ON_MIGRATE: ${FLYWAY_BASELINE_ON_MIGRATE:-false}
+      # Telegram login
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?TELEGRAM_BOT_TOKEN .env faylida belgilanishi shart}
+      TELEGRAM_BOT_USERNAME: ${TELEGRAM_BOT_USERNAME:?TELEGRAM_BOT_USERNAME .env faylida belgilanishi shart}
+      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET:?AUTH_TOKEN_SECRET .env faylida belgilanishi shart}
+      AUTH_TOKEN_TTL_SECONDS: ${AUTH_TOKEN_TTL_SECONDS:-86400}
     ports:
       - "${BACKEND_PORT:-8011}:8080"
 

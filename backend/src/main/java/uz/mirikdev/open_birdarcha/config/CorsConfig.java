@@ -11,6 +11,8 @@ public class CorsConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
                 .allowedOrigins("http://localhost:5173")
-                .allowedMethods("GET");
+                // POST — /api/auth/callback uchun; OPTIONS — Authorization header preflight uchun.
+                .allowedMethods("GET", "POST", "OPTIONS")
+                .allowedHeaders("*");
     }
 }

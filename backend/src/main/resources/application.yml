@@ -1,14 +1,39 @@
 spring:
+  # Loyiha ildizidagi .env ni avtomatik o'qiydi (IDE'dan ham, mvn'dan ham, java -jar dan ham — export shart emas).
+  # cwd har xil bo'lishi mumkin, shuning uchun bir nechta manzil sinaladi:
+  #   ./.env          -> cwd = repo ildizi (VS Code / java -jar repo ildizidan)
+  #   ../.env         -> cwd = backend/   (mvn spring-boot:run)
+  #   ./backend/.env  -> ehtiyot uchun (agar .env backend ichida bo'lsa)
+  # Barchasi optional: fayl bo'lmasa o'tkazib yuboradi (prod konteynerda env to'g'ridan-to'g'ri beriladi).
+  config:
+    import:
+      - "optional:file:./.env[.properties]"
+      - "optional:file:../.env[.properties]"
+      - "optional:file:./backend/.env[.properties]"
   application:
     name: aloqa-backend
   datasource:
     # Ulanish ma'lumotlari environment'dan olinadi (deploy uchun).
     # Lokal ishlashda quyidagi standart qiymatlar ishlatiladi.
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/aloqa}
-    username: ${DB_USERNAME:aloqa}
-    password: ${DB_PASSWORD:aloqa}
+    # url: ${DB_URL:jdbc:postgresql://localhost:5432/aloqa}
+    # username: ${DB_USERNAME:aloqa}
+    # password: ${DB_PASSWORD:aloqa}
+    url: jdbc:postgresql://localhost:5432/aloqa
+    username: aloqa
+    password: aloqa
+
   flyway:
     enabled: true
     baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:false}
 server:
   port: ${SERVER_PORT:8080}
+
+# Telegram bot orqali login.
+telegram:
+  bot-token: ${TELEGRAM_BOT_TOKEN:}
+  bot-username: ${TELEGRAM_BOT_USERNAME:}
+
+# O'zimizning sessiya token'imiz (HMAC). Prod'da AUTH_TOKEN_SECRET ni albatta o'zgartiring.
+auth:
+  token-secret: ${AUTH_TOKEN_SECRET:dev-faqat-uchun-maxfiy-kalit-32-belgidan-uzun}
+  token-ttl-seconds: ${AUTH_TOKEN_TTL_SECONDS:86400}

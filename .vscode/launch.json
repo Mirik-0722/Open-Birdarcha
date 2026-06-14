@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "GrafiApplication",
+            "request": "launch",
+            "mainClass": "uz.mirikdev.open_birdarcha.GrafiApplication",
+            "projectName": "aloqa-backend"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-GrafiApplication<aloqa-backend>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
