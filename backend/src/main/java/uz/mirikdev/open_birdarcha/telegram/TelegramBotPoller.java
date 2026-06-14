@@ -7,6 +7,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import uz.mirikdev.open_birdarcha.auth.AppUserDao;
 import uz.mirikdev.open_birdarcha.auth.LoginSessionStore;
 import uz.mirikdev.open_birdarcha.service.AuthService;
 
@@ -25,14 +26,16 @@ public class TelegramBotPoller {
     private final TelegramClient tg;
     private final LoginSessionStore sessions;
     private final AuthService auth;
+    private final AppUserDao appUsers;
 
     private volatile boolean running = false;
     private long offset = 0;
 
-    public TelegramBotPoller(TelegramClient tg, LoginSessionStore sessions, AuthService auth) {
+    public TelegramBotPoller(TelegramClient tg, LoginSessionStore sessions, AuthService auth, AppUserDao appUsers) {
         this.tg = tg;
         this.sessions = sessions;
         this.auth = auth;
+        this.appUsers = appUsers;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -162,6 +165,14 @@ public class TelegramBotPoller {
             log.info("✅ Login: id={}, first={}, last={}, username={}, tel={}",
                     user.get("id"), user.get("first_name"), user.get("last_name"),
                     user.get("username"), user.get("phone"));
+            // Foydalanuvchini DB'ga yozamiz/yangilaymiz (audit). DB xato bo'lsa ham login buzilmaydi.
+            try {
+                appUsers.upsertOnLogin(fromId,
+                        (String) user.get("first_name"), (String) user.get("last_name"),
+                        (String) user.get("username"), (String) user.get("phone"));
+            } catch (Exception e) {
+                log.warn("app_user upsert xato (login davom etadi): {}", e.getMessage());
+            }
 
             // Muvaffaqiyat xabari + "Saytga qaytish". Avval inline tugma sinaladi (real https domen uchun ideal);
             // Telegram URL'ni rad etsa (localhost/IP) — havola matn ko'rinishida yuboriladi.
