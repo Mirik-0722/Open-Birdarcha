@@ -1,8 +1,10 @@
+# syntax=docker/dockerfile:1
 # ---- Build: statik fayllar ----
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# --mount=cache: npm yuklab olishlari build'lar orasida saqlanadi.
+RUN --mount=type=cache,target=/root/.npm npm ci
 COPY . .
 RUN npm run build
 
