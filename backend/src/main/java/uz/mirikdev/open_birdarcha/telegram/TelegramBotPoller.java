@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import uz.mirikdev.open_birdarcha.auth.LoginSessionStore;
 import uz.mirikdev.open_birdarcha.service.AuthService;
 
@@ -40,6 +41,13 @@ public class TelegramBotPoller {
             log.warn("TELEGRAM_BOT_TOKEN berilmagan — Telegram login o'chirilgan.");
             return;
         }
+        // Webhook o'rnatilgan bo'lsa polling bilan ziddiyatga (409) tushadi — startup'da tozalaymiz.
+        try {
+            tg.deleteWebhook();
+            log.info("Telegram webhook tozalandi — polling rejimi.");
+        } catch (Exception e) {
+            log.warn("deleteWebhook xato (e'tiborsiz qoldiramiz): {}", e.getMessage());
+        }
         running = true;
         Thread t = new Thread(this::loop, "tg-poller");
         t.setDaemon(true);
@@ -55,6 +63,17 @@ public class TelegramBotPoller {
                     offset = upd.path("update_id").asLong() + 1;
                     handle(upd);
                 }
+            } catch (HttpClientErrorException.Conflict e) {
+                // 409: aynan shu token bilan boshqa getUpdates ulanishi bor.
+                log.warn("getUpdates 409 Conflict — shu bot token bilan boshqa getUpdates ulanishi faol. "
+                        + "Sabablari: eski/ikkinchi instans ishlayapti, qayta ishga tushishda eski long-poll "
+                        + "hali uzilmagan, yoki webhook qaytadan o'rnatilgan. Webhookni tozalab, qayta urinamiz...");
+                try {
+                    tg.deleteWebhook();
+                } catch (Exception ignored) {
+                    // tozalash imkoni bo'lmasa — keyingi urinishda davom etamiz
+                }
+                sleep(5000);
             } catch (Exception e) {
                 log.warn("getUpdates xato: {}", e.getMessage());
                 sleep(3000);
