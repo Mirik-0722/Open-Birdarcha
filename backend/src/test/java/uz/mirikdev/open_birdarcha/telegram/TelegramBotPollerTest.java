@@ -3,6 +3,7 @@ package uz.mirikdev.open_birdarcha.telegram;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import uz.mirikdev.open_birdarcha.auth.AppUserDao;
 import uz.mirikdev.open_birdarcha.auth.LoginSessionStore;
 import uz.mirikdev.open_birdarcha.service.AuthService;
 
@@ -24,7 +25,7 @@ class TelegramBotPollerTest {
     }
 
     private TelegramBotPoller poller(TelegramClient tg) {
-        return new TelegramBotPoller(tg, new LoginSessionStore(), mock(AuthService.class));
+        return new TelegramBotPoller(tg, new LoginSessionStore(), mock(AuthService.class), mock(AppUserDao.class));
     }
 
     @Test
