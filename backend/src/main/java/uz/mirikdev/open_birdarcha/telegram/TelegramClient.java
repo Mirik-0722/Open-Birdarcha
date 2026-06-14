@@ -50,6 +50,14 @@ public class TelegramClient {
         return call("getUpdates", Map.of("offset", offset, "timeout", timeoutSec));
     }
 
+    /**
+     * Botda webhook o'rnatilgan bo'lsa o'chiradi — webhook va getUpdates (polling) birga ishlay olmaydi
+     * (409 Conflict sababi). Polling rejimiga o'tishdan oldin startup'da chaqiriladi.
+     */
+    public void deleteWebhook() {
+        call("deleteWebhook", Map.of());
+    }
+
     public void sendMessage(long chatId, String text, Map<String, Object> replyMarkup) {
         Map<String, Object> body = new HashMap<>();
         body.put("chat_id", chatId);
