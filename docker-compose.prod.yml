@@ -26,6 +26,14 @@ services:
       APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS:-https://open.birdarcha.mirikdev.uz}
     ports:
       - "${BACKEND_PORT:-8011}:8080"
+    # Port 8080 ochilganini tekshiradi (bash /dev/tcp — temurin Ubuntu image'da bash bor).
+    # start_period: Spring ishga tushguncha "unhealthy" hisoblanmaydi.
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/8080' || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
   frontend:
     build:
