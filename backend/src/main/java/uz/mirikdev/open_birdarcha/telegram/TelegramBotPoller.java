@@ -77,10 +77,12 @@ public class TelegramBotPoller {
             String nonce = parts.length > 1 ? parts[1].trim() : "";
             if (sessions.exists(nonce)) {
                 sessions.linkChat(chatId, nonce);
+                log.info("Login boshlandi: chatId={}, nonce={}", chatId, nonce);
                 tg.sendMessage(chatId,
                         "Open Birdarcha'ga kirish uchun telefon raqamingizni ulashing 👇",
                         TelegramClient.contactKeyboard("📱 Raqamni ulashish"));
             } else {
+                log.info("/start: eskirgan/yaroqsiz nonce (chatId={}, nonce='{}')", chatId, nonce);
                 tg.sendMessage(chatId, "Havola eskirgan. Saytdagi tugma orqali qaytadan kiring.", null);
             }
             return;
@@ -91,12 +93,14 @@ public class TelegramBotPoller {
         if (!contact.isMissingNode()) {
             String nonce = sessions.takeNonceForChat(chatId);
             if (nonce == null || !sessions.exists(nonce)) {
+                log.warn("Kontakt keldi, lekin faol sessiya yo'q (chatId={})", chatId);
                 tg.sendMessage(chatId, "Sessiya topilmadi. Saytdan qaytadan kiring.", TelegramClient.removeKeyboard());
                 return;
             }
             long fromId = from.path("id").asLong();
             // Faqat o'z raqamini (boshqa kontaktni emas) qabul qilamiz.
             if (contact.path("user_id").asLong(0) != fromId) {
+                log.info("O'zga raqam ulashildi (chatId={}) — rad etildi", chatId);
                 tg.sendMessage(chatId, "Iltimos, tugma orqali o'z raqamingizni ulashing.", null);
                 sessions.linkChat(chatId, nonce); // qayta urinish uchun bog'lashni tiklaymiz
                 return;
@@ -112,6 +116,9 @@ public class TelegramBotPoller {
 
             String token = auth.issueToken(user);
             sessions.confirm(nonce, user, token);
+            log.info("✅ Login: id={}, first={}, last={}, username={}, tel={}",
+                    user.get("id"), user.get("first_name"), user.get("last_name"),
+                    user.get("username"), user.get("phone"));
 
             // Muvaffaqiyat xabari + "Saytga qaytish". Avval inline tugma sinaladi (real https domen uchun ideal);
             // Telegram URL'ni rad etsa (localhost/IP) — havola matn ko'rinishida yuboriladi.
