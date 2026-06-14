@@ -50,6 +50,11 @@ public class TelegramClient {
         return call("getUpdates", Map.of("offset", offset, "timeout", timeoutSec));
     }
 
+    /** Bot token/ulanishini tekshiradi — Telegram getMe javobini qaytaradi (ok + result.username/id). */
+    public JsonNode getMe() {
+        return call("getMe", Map.of());
+    }
+
     /**
      * Botda webhook o'rnatilgan bo'lsa o'chiradi — webhook va getUpdates (polling) birga ishlay olmaydi
      * (409 Conflict sababi). Polling rejimiga o'tishdan oldin startup'da chaqiriladi.
