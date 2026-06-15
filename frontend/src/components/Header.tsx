@@ -8,7 +8,7 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const onHome = location.pathname === "/";
-  const { user, logout } = useAuth();
+  const { user, authenticated, logout } = useAuth();
 
   function onLogout() {
     logout();
@@ -61,19 +61,27 @@ export default function Header() {
           <Link to="/path">
             <IconRoute size={16} /> Bog'lanish zanjiri
           </Link>
-          <span className="header-user" title={user?.phone ?? undefined}>
-            {user?.photo ? (
-              <img className="header-avatar" src={user.photo} alt="" />
-            ) : (
-              <span className="header-avatar header-avatar--ph">
-                {userDisplayName(user).charAt(0).toUpperCase()}
+          {authenticated ? (
+            <>
+              <span className="header-user" title={user?.phone ?? undefined}>
+                {user?.photo ? (
+                  <img className="header-avatar" src={user.photo} alt="" />
+                ) : (
+                  <span className="header-avatar header-avatar--ph">
+                    {userDisplayName(user).charAt(0).toUpperCase()}
+                  </span>
+                )}
+                {userDisplayName(user)}
               </span>
-            )}
-            {userDisplayName(user)}
-          </span>
-          <button className="logout-btn" onClick={onLogout}>
-            Chiqish
-          </button>
+              <button className="logout-btn" onClick={onLogout}>
+                Chiqish
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="logout-btn">
+              Kirish
+            </Link>
+          )}
         </nav>
       </div>
     </header>

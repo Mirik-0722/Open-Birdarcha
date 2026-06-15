@@ -1,0 +1,9 @@
+User-agent: *
+# Maxfiy (login ortidagi) bo'limlar — crawl qilinmasin
+Disallow: /company/
+Disallow: /person/
+Disallow: /path
+Disallow: /api/
+# Bosh sahifa (/) va /login ochiq
+
+Sitemap: https://open.birdarcha.mirikdev.uz/sitemap.xml
