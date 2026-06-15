@@ -25,6 +25,9 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:false}
+  # Vaqt zonasi — API JSON sana/vaqti Asia/Tashkent (UTC+5) da serializatsiya qilinadi.
+  jackson:
+    time-zone: ${APP_TIMEZONE:Asia/Tashkent}
 server:
   port: ${SERVER_PORT:8080}
   # Reverse-proxy (nginx) orqasida — X-Forwarded-* header'larini hisobga oladi (https/host to'g'ri aniqlanadi).
